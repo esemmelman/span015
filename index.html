@@ -10,10 +10,10 @@ button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-ite
 </style>
 </head>
 <body><main>
-<section class="panel"><span id="position" class="tag"></span><h2 id="verb"></h2><div id="progress" class="status" aria-live="polite"></div></section>
+<section class="panel"><h2 id="verb"></h2></section>
 <form id="quiz"><div id="questions"></div></form>
 <section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Answer all 10 questions to continue.</p></section>
-<footer>14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<footer>Version 1.1.0 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -36,7 +36,7 @@ const subjects=['Yo','Tú','Ella','Nosotros','Vosotros','Ustedes','Él','Ellas',
 const formIndices=[1,2,3,4,5,6,3,6,3,1];
 
 const translations=['to want','to be able to / can','to start','to prefer','to lose','to begin','to count / tell','to ask for / request','to wake up','to eat lunch','to laugh','to go to bed','to follow / continue','to find'];
-const questions=document.querySelector('#questions'),form=document.querySelector('#quiz'),results=document.querySelector('#results'),progress=document.querySelector('#progress'),next=document.querySelector('#next');
+const questions=document.querySelector('#questions'),form=document.querySelector('#quiz'),results=document.querySelector('#results'),next=document.querySelector('#next');
 let current=0,items=[],answers=[];
 function shuffle(values){for(let i=values.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[values[i],values[j]]=[values[j],values[i]]}return values}
 function createItems(v){
@@ -50,7 +50,6 @@ function createItems(v){
 }
 function render(){
  const v=verbs[current];items=createItems(v);answers=Array(10).fill(null);questions.replaceChildren();
- document.querySelector('#position').textContent='Verb '+(current+1)+' of '+verbs.length;
  document.querySelector('#verb').textContent=v[0]+' — '+translations[current];
  items.forEach((item,i)=>{
   const card=document.createElement('section');card.className='question';
@@ -60,7 +59,6 @@ function render(){
 }
 function updateScore(){
  const answered=answers.filter(value=>value!==null).length,score=answers.filter(value=>value===true).length;
- progress.textContent=answered+' of 10 answered · '+score+' correct';
  results.innerHTML='<p class="result">'+(answered===10?'Final score: ':'Score: ')+score+' / '+(answered===0?'0':answered)+(answered===10?' · '+score*10+'%':'')+'</p>';
  next.disabled=answered!==10||current===verbs.length-1;
  document.querySelector('#next-help').textContent=answered!==10?'Answer all 10 questions to continue.':current===verbs.length-1?'You completed all 14 verbs! Restart quiz to practice this verb again.':'Quiz scored. Continue to '+verbs[current+1][0]+' — '+translations[current+1]+'.';
