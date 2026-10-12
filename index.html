@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spanish Present-Tense Quiz</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#192841;background:#f1f5fa}*{box-sizing:border-box}body{margin:0}main{max-width:900px;margin:auto;padding:32px 20px}h1{margin:8px 0;font-size:clamp(26px,5vw,40px)}.intro{color:#52647b;line-height:1.6}.panel,.question{background:white;border:1px solid #dce4ee;border-radius:16px;padding:22px;margin:16px 0}.controls{display:flex;gap:12px;align-items:end;flex-wrap:wrap}label{display:block;font-weight:600}select,button{font:inherit;border-radius:9px;padding:11px 15px}select{margin-top:7px;border:1px solid #a8b8cd;background:white;max-width:100%}button{cursor:pointer;border:1px solid #b9c8dc;background:#fff;color:#192841}button.primary{background:#245bd7;color:white;border-color:#245bd7}button:hover{filter:brightness(.96)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #edab32;outline-offset:3px}.tag{font-size:12px;text-transform:uppercase;letter-spacing:2px;color:#245bd7;font-weight:700}.status{color:#52647b;margin-top:16px}.question h2{font-size:20px;margin:0 0 18px}.answers{display:flex;gap:12px}.answers label{border:1px solid #bbc9dc;border-radius:9px;padding:11px 20px;cursor:pointer}.answers label:has(input:checked){background:#eaf0ff;border-color:#245bd7}input{margin-right:8px}.feedback{margin:14px 0 0;line-height:1.5}.correct{border-left:5px solid #228352}.incorrect{border-left:5px solid #c74343}.result{font-size:20px;font-weight:700}.hidden{display:none}footer{color:#52647b;font-size:14px;padding:18px 0}
+</style>
+</head>
+<body><main>
+<span class="tag">Spanish practice · Present indicative</span>
+<h1>Is this conjugation correct?</h1>
+<p class="intro">Choose a verb, then mark each statement True or False. Each verb has 10 questions. Submit to see your score and the correct conjugations.</p>
+<section class="panel"><div class="controls"><div><label for="verb">Practice verb</label><select id="verb"></select></div><button id="restart" type="button">Restart quiz</button></div><p class="intro">Includes <i>vosotros</i> (mainly used in Spain). Despertarse and acostarse use reflexive pronouns, as in your examples.</p><div id="progress" class="status" aria-live="polite"></div></section>
+<form id="quiz"><div id="questions"></div><button class="primary" type="submit">Check answers</button></form>
+<section id="results" class="panel hidden" tabindex="-1" aria-live="polite"></section>
+<footer>14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+</main>
+<script>
+const verbs=[
+['querer','quiero','quieres','quiere','queremos','queréis','quieren','queres','quieremos','quieres','queren','quiere'],
+['poder','puedo','puedes','puede','podemos','podéis','pueden','podo','puedemos','poden','puedes','puede'],
+['empezar','empiezo','empiezas','empieza','empezamos','empezáis','empiezan','empeza','empiezáis','empiezas','empezan','empieza'],
+['preferir','prefiero','prefieres','prefiere','preferimos','preferís','prefieren','prefero','prefierimos','preferen','prefieres','prefiere'],
+['perder','pierdo','pierdes','pierde','perdemos','perdéis','pierden','perdes','pierdemos','pierdes','perden','pierde'],
+['comenzar','comienzo','comienzas','comienza','comenzamos','comenzáis','comienzan','comenzo','comienzamos','comenzan','comienzas','comienza'],
+['contar','cuento','cuentas','cuenta','contamos','contáis','cuentan','conta','cuentáis','cuentas','contan','cuenta'],
+['pedir','pido','pides','pide','pedimos','pedís','piden','pedo','pidimos','peden','pides','pide'],
+['despertarse','me despierto','te despiertas','se despierta','nos despertamos','os despertáis','se despiertan','te despertas','nos despiertamos','se despiertas','se despertan','me despierta'],
+['almorzar','almuerzo','almuerzas','almuerza','almorzamos','almorzáis','almuerzan','almorzo','almuerzamos','almorzan','almuerzas','almuerza'],
+['reír','río','ríes','ríe','reímos','reís','ríen','ríen','ríis','ríes','ríe','ríe'],
+['acostarse','me acuesto','te acuestas','se acuesta','nos acostamos','os acostáis','se acuestan','me acosto','nos acuestamos','se acostan','se acuestas','me acuesta'],
+['seguir','sigo','sigues','sigue','seguimos','seguís','siguen','segues','siguimos','sigues','seguen','sigue'],
+['encontrar','encuentro','encuentras','encuentra','encontramos','encontráis','encuentran','encontro','encuentramos','encontran','encuentras','encuentra']
+];
+const subjects=['Yo','Tú','Ella','Nosotros','Vosotros','Ustedes','Él','Ellas','Usted','Yo'];
+const formIndices=[1,2,3,4,5,6,3,6,3,1];
+const falseSets=[[1,3,6,7,9],[0,3,5,6,9],[2,4,6,7,9]];
+const select=document.querySelector('#verb'),questions=document.querySelector('#questions'),form=document.querySelector('#quiz'),results=document.querySelector('#results'),progress=document.querySelector('#progress');
+let items=[],graded=false;
+verbs.forEach((v,i)=>{const option=document.createElement('option');option.value=i;option.textContent=v[0];select.append(option)});
+function render(){
+ const index=Number(select.value),v=verbs[index];
+ const pattern=index%2===1?1:([2,6,10].includes(index)?2:0);
+ const falseIndices=falseSets[pattern];let wrong=7;
+ items=subjects.map((subject,i)=>({subject,correct:v[formIndices[i]],shown:falseIndices.includes(i)?v[wrong++]:v[formIndices[i]],truth:!falseIndices.includes(i)}));
+ // Shuffle the statements so answer patterns are not predictable.
+ for(let i=items.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[items[i],items[j]]=[items[j],items[i]]}
+ graded=false;results.classList.add('hidden');results.replaceChildren();questions.replaceChildren();
+ items.forEach((item,i)=>{const card=document.createElement('section');card.className='question';card.innerHTML=`<h2 id="q${i}">${i+1}. ${item.subject} ${item.shown}.</h2><div class="answers" role="group" aria-labelledby="q${i}"><label><input type="radio" name="q${i}" value="true">True</label><label><input type="radio" name="q${i}" value="false">False</label></div><p class="feedback hidden"></p>`;questions.append(card)});
+ updateProgress();
+}
+function updateProgress(){const answered=form.querySelectorAll('input:checked').length;progress.textContent=`${answered} of 10 answered${graded?' · Answers checked':''}`}
+form.addEventListener('change',()=>{if(graded){graded=false;results.classList.add('hidden');questions.querySelectorAll('.question').forEach(card=>{card.classList.remove('correct','incorrect');card.querySelector('.feedback').classList.add('hidden')})}updateProgress()});
+form.addEventListener('submit',event=>{
+ event.preventDefault();const answers=items.map((_,i)=>form.querySelector(`input[name="q${i}"]:checked`));
+ if(answers.some(a=>!a)){progress.textContent='Please answer all 10 questions before checking.';const first=answers.findIndex(a=>!a);form.querySelector(`input[name="q${first}"]`).focus();return}
+ let score=0;items.forEach((item,i)=>{const correct=(answers[i].value==='true')===item.truth;if(correct)score++;const card=questions.children[i];card.classList.remove('correct','incorrect');card.classList.add(correct?'correct':'incorrect');const feedback=card.querySelector('.feedback');feedback.textContent=`${correct?'✓ Correct.':'✗ Incorrect.'} This statement is ${item.truth?'True':'False'}. Correct form: ${item.subject} ${item.correct}.`;feedback.classList.remove('hidden')});
+ graded=true;updateProgress();results.classList.remove('hidden');results.innerHTML=`<p class="result">${score} / 10 correct · ${score*10}%</p><p>${score===10?'Excellent! You got every conjugation right.':'Review the corrections above, then restart or choose another verb.'}</p><button type="button" id="next">Next verb →</button>`;document.querySelector('#next').onclick=()=>{select.value=(Number(select.value)+1)%verbs.length;render();select.focus()};results.focus();
+});
+select.addEventListener('change',render);document.querySelector('#restart').addEventListener('click',render);render();
+</script></body></html>
