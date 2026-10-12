@@ -17,7 +17,7 @@ button.primary:disabled{background:#e2e5ea;color:#737b87;border-color:#cbd0d8;op
 <section class="panel"><h2 id="verb"></h2><p class="tense">Present tense</p></section>
 <form id="quiz"><div id="questions"></div></form>
 <section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Score 100% to unlock the next quiz.</p></section>
-<footer>Version 1.1.12 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<footer>Version 1.1.13 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -79,13 +79,13 @@ form.addEventListener('change',event=>{
   if(right&&option.checked){option.closest('label').classList.add('answer-correct')}
   else if(!right&&option.checked){option.closest('label').classList.add('answer-wrong')}
  });
- if(right){
+ if(right&&item.truth){
   card.querySelector('h2').classList.add('question-correct');
- }else{
+ }else if(!right){
   const mark=document.createElement('span');mark.className='wrong-mark';mark.textContent='✕';mark.setAttribute('aria-label','Incorrect');
   input.closest('label').append(mark);
  }
- if(!right&&!item.truth){
+ if(!item.truth){
   card.querySelector('.conjugated').classList.add('struck');
   card.querySelector('.statement-period').remove();
   const correction=document.createElement('span');correction.className='correction';
