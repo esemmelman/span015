@@ -13,7 +13,7 @@ button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-ite
 <section class="panel"><h2 id="verb"></h2></section>
 <form id="quiz"><div id="questions"></div></form>
 <section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Answer all 10 questions to continue.</p></section>
-<footer>Version 1.1.0 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<footer>Version 1.1.1 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -69,13 +69,15 @@ form.addEventListener('change',event=>{
  const i=Number(input.dataset.index);if(answers[i]!==null)return;
  const item=items[i],right=(input.value==='true')===item.truth;answers[i]=right;
  const card=questions.children[i];
- card.querySelectorAll('input').forEach(option=>{option.disabled=true;option.closest('label').classList.add((option.value==='true')===item.truth?'answer-correct':'answer-wrong')});
- const verdict=card.querySelector('.verdict');verdict.classList.add(right?'good':'bad');
- if(right){verdict.textContent='Correct!'}else{
-  verdict.textContent='The correct answer is ';
-  const answer=document.createElement('strong');answer.textContent=item.truth?'True':'False';verdict.append(answer);
-  const feedback=card.querySelector('.feedback');feedback.append('Correct conjugation: ');
-  const conjugation=document.createElement('strong');conjugation.textContent=item.subject+' '+item.correct;feedback.append(conjugation,'.');feedback.classList.remove('hidden');
+ card.querySelectorAll('input').forEach(option=>{
+  option.disabled=true;
+  if((option.value==='true')===item.truth){option.closest('label').classList.add('answer-correct')}
+  else if(!right&&option.checked){option.closest('label').classList.add('answer-wrong')}
+ });
+ if(!right){
+  const correction=document.createElement('strong');correction.className='correction';
+  correction.textContent=item.subject+' '+item.correct;correction.setAttribute('aria-label','Correct conjugation: '+correction.textContent);
+  card.querySelector('h2').append(' → ',correction);
  }
  updateScore();
 });
