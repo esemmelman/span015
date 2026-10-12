@@ -15,7 +15,7 @@ button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-ite
 <section class="panel"><h2 id="verb"></h2></section>
 <form id="quiz"><div id="questions"></div></form>
 <section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Answer all 10 questions to continue.</p></section>
-<footer>Version 1.1.6 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<footer>Version 1.1.7 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -79,10 +79,11 @@ form.addEventListener('change',event=>{
  });
  if(right){
   card.querySelector('h2').classList.add('question-correct');
- }else if(item.truth){
+ }else{
   const mark=document.createElement('span');mark.className='wrong-mark';mark.textContent='✕';mark.setAttribute('aria-label','Incorrect');
   input.closest('label').append(mark);
- }else{
+ }
+ if(!right&&!item.truth){
   card.querySelector('.conjugated').classList.add('struck');
   card.querySelector('.statement-period').remove();
   const correction=document.createElement('span');correction.className='correction';
