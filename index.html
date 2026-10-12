@@ -72,8 +72,13 @@ form.addEventListener('change',event=>{
  const item=items[i],right=(input.value==='true')===item.truth;answers[i]=right;
  const card=questions.children[i];
  card.querySelectorAll('input').forEach(option=>{option.disabled=true;option.closest('label').classList.add((option.value==='true')===item.truth?'answer-correct':'answer-wrong')});
- const verdict=card.querySelector('.verdict');verdict.textContent=right?' - Correct':' - Incorrect';verdict.classList.add(right?'good':'bad');
- const feedback=card.querySelector('.feedback');feedback.textContent='Correct conjugation: '+item.subject+' '+item.correct+'.';feedback.classList.remove('hidden');feedback.classList.add('correction');
+ const verdict=card.querySelector('.verdict');verdict.classList.add(right?'good':'bad');
+ if(right){verdict.textContent='Correct!'}else{
+  verdict.textContent='The correct answer is ';
+  const answer=document.createElement('strong');answer.textContent=item.truth?'True':'False';verdict.append(answer);
+  const feedback=card.querySelector('.feedback');feedback.append('Correct conjugation: ');
+  const conjugation=document.createElement('strong');conjugation.textContent=item.subject+' '+item.correct;feedback.append(conjugation,'.');feedback.classList.remove('hidden');
+ }
  updateScore();
 });
 document.querySelector('#restart').addEventListener('click',()=>{render();window.scrollTo({top:0,behavior:'smooth'})});
