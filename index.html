@@ -9,14 +9,14 @@
 button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-items:center}.answers label.answer-correct{background:#dcfce7;border:2px solid #228352;color:#14532d}.answers label.answer-wrong{background:#fee2e2;border:2px solid #c74343;color:#991b1b}.answers label:has(input:disabled){cursor:default}.verdict{font-weight:400}.verdict.good{color:#14532d;font-weight:700}.verdict.bad{color:#991b1b}.correction{color:inherit;font:inherit}.struck{text-decoration:line-through;text-decoration-thickness:2px}#verb{font-size:28px;margin:14px 0}#results p{margin-top:0}
 .answers label{position:relative}.wrong-mark{position:absolute;right:-10px;top:-14px;width:28px;height:28px;border-radius:50%;background:#c74343;color:white;display:grid;place-items:center;font-size:20px;font-weight:700;line-height:1}
 .question h2.question-correct{color:#228352}
-.tense{margin:0;color:#52647b;font-size:18px}
+.tense{margin:0;color:inherit;font-size:28px;font-weight:700}
 </style>
 </head>
 <body><main>
 <section class="panel"><h2 id="verb"></h2><p class="tense">Present tense</p></section>
 <form id="quiz"><div id="questions"></div></form>
 <section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary hidden" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Score 100% to unlock the next quiz.</p></section>
-<footer>Version 1.1.9 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<footer>Version 1.1.10 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
