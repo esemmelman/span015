@@ -10,13 +10,14 @@ button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-ite
 .answers label{position:relative}.wrong-mark{position:absolute;right:-10px;top:-14px;width:28px;height:28px;border-radius:50%;background:#c74343;color:white;display:grid;place-items:center;font-size:20px;font-weight:700;line-height:1}
 .question h2.question-correct{color:#228352}
 .tense{margin:0;color:inherit;font-size:28px;font-weight:700}
+button.primary:disabled{background:#e2e5ea;color:#737b87;border-color:#cbd0d8;opacity:1}
 </style>
 </head>
 <body><main>
 <section class="panel"><h2 id="verb"></h2><p class="tense">Present tense</p></section>
 <form id="quiz"><div id="questions"></div></form>
-<section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary hidden" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Score 100% to unlock the next quiz.</p></section>
-<footer>Version 1.1.11 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Score 100% to unlock the next quiz.</p></section>
+<footer>Version 1.1.12 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -65,7 +66,6 @@ function updateScore(){
  const answered=answers.filter(value=>value!==null).length,score=answers.filter(value=>value===true).length;
  results.innerHTML='<p class="result">'+(answered===10?'Final score: ':'Score: ')+score+' / '+(answered===0?'0':answered)+(answered===10?' · '+score*10+'%':'')+'</p>';
  next.disabled=score!==10||current===verbs.length-1;
- next.classList.toggle('hidden',next.disabled);
  document.querySelector('#next-help').textContent=answered!==10?'Score 100% to unlock the next quiz.':score!==10?'Restart quiz and score 100% to continue.':current===verbs.length-1?'You completed all 14 verbs with 100%!':'100%! Continue to '+verbs[current+1][0]+' — '+translations[current+1]+'.';
 }
 form.addEventListener('submit',event=>event.preventDefault());
