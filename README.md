@@ -1,6 +1,6 @@
 # Spanish Present-Tense Quiz
 
-An interactive true-or-false quiz covering 14 Spanish verbs, with 10 questions per verb, shuffled questions, scoring, and corrections.
+An interactive true-or-false quiz covering 14 Spanish verbs in sequence, with English translations and 10 questions per verb. Each selection is scored immediately, with correct answers highlighted green and wrong answers red. Complete a verb to unlock the next quiz. Restarting reshuffles the questions and randomizes which statements are true or false.
 
 Open `index.html` in a browser to practice offline, or visit https://esemmelman.github.io/spanish-present-tense-quiz/.
 
