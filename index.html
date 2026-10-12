@@ -14,8 +14,8 @@ button:disabled{opacity:.45;cursor:not-allowed}.answers{flex-wrap:wrap;align-ite
 <body><main>
 <section class="panel"><h2 id="verb"></h2></section>
 <form id="quiz"><div id="questions"></div></form>
-<section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Answer all 10 questions to continue.</p></section>
-<footer>Version 1.1.7 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
+<section class="panel"><div id="results" aria-live="polite"></div><div class="controls"><button id="restart" type="button">Restart quiz</button><button id="next" class="primary hidden" type="button" disabled>Next quiz</button></div><p id="next-help" class="status">Score 100% to unlock the next quiz.</p></section>
+<footer>Version 1.1.8 · 14 verbs · 140 questions · Works offline · Your answers stay in this tab.</footer>
 </main>
 <script>
 const verbs=[
@@ -63,8 +63,9 @@ function render(){
 function updateScore(){
  const answered=answers.filter(value=>value!==null).length,score=answers.filter(value=>value===true).length;
  results.innerHTML='<p class="result">'+(answered===10?'Final score: ':'Score: ')+score+' / '+(answered===0?'0':answered)+(answered===10?' · '+score*10+'%':'')+'</p>';
- next.disabled=answered!==10||current===verbs.length-1;
- document.querySelector('#next-help').textContent=answered!==10?'Answer all 10 questions to continue.':current===verbs.length-1?'You completed all 14 verbs! Restart quiz to practice this verb again.':'Quiz scored. Continue to '+verbs[current+1][0]+' — '+translations[current+1]+'.';
+ next.disabled=score!==10||current===verbs.length-1;
+ next.classList.toggle('hidden',next.disabled);
+ document.querySelector('#next-help').textContent=answered!==10?'Score 100% to unlock the next quiz.':score!==10?'Restart quiz and score 100% to continue.':current===verbs.length-1?'You completed all 14 verbs with 100%!':'100%! Continue to '+verbs[current+1][0]+' — '+translations[current+1]+'.';
 }
 form.addEventListener('submit',event=>event.preventDefault());
 form.addEventListener('change',event=>{
